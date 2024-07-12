@@ -1,41 +1,27 @@
 {
- 
-    "base" : {
-        "app_name" : "Gtdf app",
-        "app_version" : "v1.0.0",
-        "host" : "127.0.0.1",
-        "port" : "80",
-        "enviroment" : "development",
-        "debug" : "true",
-        "log_level" : "debug",
-        "website" : "https://akrck02.github.io/#/software/GTD-Framework",
-        "author" : "akrck02"
-    },
-
-    "path" : {
-        "url" : "..",
-        "app" : "app",
-        "resources" : "resources",
-        "language" : "resources/i18n",
-        "images" : "resources/images",
-        "icons" : "resources/icons"
-    },
-
-    "views" : {
-        "url" : "app/#",
-        "home" : "home",
-        "error" : "error",
-        "blank" : "blank"
-    },
-
-    "api" : {
-        "url" : "https://api.github.com/repos/akrck02/GTD-Framework/languages"
-    },
-
-    "variables" : {
-        "animations" : "true",
-        "language" : "en",
-        "theme" : "light"
-    }
-
+  "base": {
+    "app_name": "Gtdf app",
+    "app_version": "v1.0.0",
+    "enviroment": "development",
+    "author": "akrck02"
+  },
+  "path": {
+    "url": "..",
+    "resources": "resources",
+    "language": "resources/i18n",
+    "images": "resources/images",
+    "icons": "resources/icons"
+  },
+  "views": {
+    "url": "/#",
+    "home": "home",
+    "error": "error",
+    "blank": "blank"
+  },
+  "api": {},
+  "variables": {
+    "animations": "true",
+    "language": "en",
+    "theme": "light"
+  }
 }
