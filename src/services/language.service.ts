@@ -1,6 +1,6 @@
-import { Configuration } from "../configuration/configuration";
-import { StringMap } from "../lib/gtdf/data/strings";
-import { Languages } from "../lib/gtdf/language/language";
+import { Configuration } from "../configuration/configuration.js";
+import { StringMap } from "../lib/gtdf/data/strings.js";
+import { Languages } from "../lib/gtdf/language/language.js";
 
 export default class LanguageService {
   /**

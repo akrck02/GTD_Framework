@@ -33,6 +33,6 @@ export default class HomeViewCore extends ViewCore {
   public static async setLanguage(selected: string) {
     Configuration.instance().setLanguage(selected);
     await TextBundle.reloadSignal.emit();
-    Utils.redirect(Configuration.instance().Views.home, [], true);
+    Utils.redirect(Configuration.instance().views.home, [], true);
   }
 }

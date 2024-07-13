@@ -6,24 +6,41 @@ import Language from "../lib/gtdf/language/language.js";
 /**
  * Environment states
  */
-export enum ENVIRONMENT {
+export enum Environment {
   DEVELOPMENT = "development",
   PRODUCTION = "production",
 }
 
+/**
+ * Available themes for the application
+ */
+export enum Theme {
+  DARK = "dark",
+  LIGHT = "light",
+}
+
+/**
+ * General variables for the application
+ */
 interface IVariables {
   animations: boolean;
-  environment: ENVIRONMENT;
+  environment: Environment;
   language: string;
 }
 
+/**
+ * Base configuration for the application
+ */
 interface IBase {
   app_name: string;
   app_version: string;
-  environment: ENVIRONMENT;
+  environment: Environment;
   author: string;
 }
 
+/**
+ * Path configurations for the application
+ */
 interface IPath {
   url: string;
   app: string;
@@ -33,6 +50,9 @@ interface IPath {
   icons: string;
 }
 
+/**
+ * Views paths for the application
+ */
 interface IViews {
   url: string;
   home: string;
@@ -40,6 +60,9 @@ interface IViews {
   blank: string;
 }
 
+/**
+ * Configuration interface
+ */
 interface IConfiguration {
   variables: IVariables;
   base: IBase;
@@ -57,6 +80,8 @@ export class Configuration implements IConfiguration {
   private static readonly ANIMATION_KEY: string = "animations";
   private static readonly LANGUAGE_KEY: string = "language";
   private static readonly THEME: string = "theme";
+  private static readonly URL_KEY: string = "url";
+  private static readonly CONFIGURATION_NAME_APPENDIX: string = "-config";
 
   public static _instance: any;
   public static instance(): any {
@@ -69,7 +94,12 @@ export class Configuration implements IConfiguration {
   views: IViews;
   api: any;
 
+  /**
+   * Load a configuration object into the class
+   * this mehod adapts the urls
+   */
   load(response: IConfiguration) {
+
     this.variables = response.variables;
     this.base = response.base;
     this.path = response.path;
@@ -77,7 +107,7 @@ export class Configuration implements IConfiguration {
     this.api = response.api;
 
     for (const key in this.path) {
-      if (key == "url") {
+      if (key == Configuration.URL_KEY) {
         this.path[key] = Urls.addSlash(this.path[key]);
         continue;
       }
@@ -87,7 +117,7 @@ export class Configuration implements IConfiguration {
 
     for (const key in this.views) {
       const element = this.views[key];
-      if (key == "url") {
+      if (key == Configuration.URL_KEY) {
         this.views[key] = Urls.addStartSlash(this.views[key]);
         this.views[key] = Urls.addSlash(this.views[key]);
         continue;
@@ -98,7 +128,7 @@ export class Configuration implements IConfiguration {
 
     for (const key in this.api) {
       const element = this.api[key];
-      if (key == "url") {
+      if (key == Configuration.URL_KEY) {
         this.api[key] = Urls.addSlash(this.api[key]);
         continue;
       }
@@ -110,67 +140,68 @@ export class Configuration implements IConfiguration {
   }
 
   /**
-   * Get a configuration variable
+   * Set configuration variables with default values
+   * if they are not set
    */
   setDefaultVariablesIfNeeded() {
-    if (this.getConfigVariable(Configuration.ANIMATION_KEY) == undefined) {
+    if (
+      this.getStorageConfigurationVariable(Configuration.ANIMATION_KEY) ==
+      undefined
+    )
       this.setAnimations(true);
-    }
 
-    if (this.getConfigVariable(Configuration.LANGUAGE_KEY) == undefined) {
-      console.log(Language.get(navigator.language));
-
+    if (
+      this.getStorageConfigurationVariable(Configuration.LANGUAGE_KEY) ==
+      undefined
+    )
       this.setLanguage(Language.get(navigator.language));
-    }
 
-    if (this.getConfigVariable(Configuration.THEME) == undefined) {
-      this.setTheme("light");
-    } else {
-      if (this.isDarkTheme()) {
-        this.setDarkMode();
-      } else {
-        this.setLightMode();
-      }
-    }
+    if (this.getStorageConfigurationVariable(Configuration.THEME) == undefined)
+      this.setTheme(Theme.LIGHT);
+    else if (this.isDarkTheme()) this.setDarkTheme();
+    else this.setLightTheme();
+
+    console.debug(
+      "Theme: " + this.getStorageConfigurationVariable(Configuration.THEME),
+    );
   }
 
   /**
-   * Get application configurations
+   * Get application configurations from storage
    * @returns the application configurations
    */
-  public getConfig() {
+  public getStorageConfiguration() {
     let localStorageConfiguration = JSON.parse(
-      localStorage.getItem(this.base.app_name + "-config"),
+      localStorage.getItem(
+        this.base.app_name + Configuration.CONFIGURATION_NAME_APPENDIX,
+      ),
     );
 
-    if (!localStorageConfiguration) {
-      localStorageConfiguration = {};
-    }
-
+    if (!localStorageConfiguration) localStorageConfiguration = {};
     return localStorageConfiguration;
   }
   /**
-   * Add a configuration variable
+   * Add a configuration variable to storage
    * @param key the name of the variable
    * @param value the value of the variable
    */
-  public setConfigVariable(key: string, value: any) {
-    let localStorageConfiguration = this.getConfig();
+  public setStorageConfigurationVariable(key: string, value: any) {
+    let localStorageConfiguration = this.getStorageConfiguration();
     const config = localStorageConfiguration;
     config[key] = value;
     localStorage.setItem(
-      this.base.app_name + "-config",
+      this.base.app_name + Configuration.CONFIGURATION_NAME_APPENDIX,
       JSON.stringify(config),
     );
   }
 
   /**
-   * Get a configuration variable
+   * Get a configuration variable from storage
    * @param key the name of the variable
    * @returns the value of the variable
    */
-  public getConfigVariable(key: string): string {
-    let localStorageConfiguration = this.getConfig();
+  public getStorageConfigurationVariable(key: string): string {
+    let localStorageConfiguration = this.getStorageConfiguration();
     return localStorageConfiguration[key];
   }
 
@@ -179,7 +210,7 @@ export class Configuration implements IConfiguration {
    * @param on The boolean to set animations
    */
   public setAnimations(on: boolean) {
-    this.setConfigVariable(Configuration.ANIMATION_KEY, on);
+    this.setStorageConfigurationVariable(Configuration.ANIMATION_KEY, on);
   }
 
   /**
@@ -187,14 +218,17 @@ export class Configuration implements IConfiguration {
    * @returns if animations are enabled
    */
   public areAnimationsEnabled(): boolean {
-    return this.getConfigVariable(Configuration.ANIMATION_KEY) === "true";
+    return (
+      this.getStorageConfigurationVariable(Configuration.ANIMATION_KEY) ===
+      "true"
+    );
   }
 
   /**
    * Set the application language
    */
   public setLanguage(lang: string) {
-    this.setConfigVariable(Configuration.LANGUAGE_KEY, lang);
+    this.setStorageConfigurationVariable(Configuration.LANGUAGE_KEY, lang);
   }
 
   /**
@@ -202,7 +236,9 @@ export class Configuration implements IConfiguration {
    * @returns The app language
    */
   public getLanguage(): string {
-    return Language.get(this.getConfigVariable(Configuration.LANGUAGE_KEY));
+    return Language.get(
+      this.getStorageConfigurationVariable(Configuration.LANGUAGE_KEY),
+    );
   }
 
   /**
@@ -218,8 +254,8 @@ export class Configuration implements IConfiguration {
    * Set animation for application on|off
    * @param on The boolean to set animations
    */
-  public setTheme(theme: string) {
-    this.setConfigVariable(Configuration.THEME, theme);
+  public setTheme(theme: Theme) {
+    this.setStorageConfigurationVariable(Configuration.THEME, theme);
   }
 
   /**
@@ -227,26 +263,41 @@ export class Configuration implements IConfiguration {
    * @returns if animations are enabled
    */
   public isDarkTheme(): boolean {
-    return this.getConfigVariable(Configuration.THEME) === "dark";
+    return (
+      this.getStorageConfigurationVariable(Configuration.THEME) === Theme.DARK
+    );
   }
 
-  public toggleTheme() {
-    if (this.isDarkTheme()) {
-      this.setLightMode();
-      return "dark";
-    } else {
-      this.setDarkMode();
-      return "light";
-    }
+  /**
+   * Toggle the theme of the application
+   */
+  public toggleTheme(): Theme {
+    if (this.isDarkTheme()) return this.setLightTheme();
+    else return this.setDarkTheme();
   }
 
-  public setDarkMode() {
-    document.documentElement.dataset.theme = "dark";
-    this.setTheme("dark");
+  /**
+   * Set the theme of the application to dark
+   */
+  public setDarkTheme(): Theme {
+    document.documentElement.dataset.theme = Theme.DARK;
+    this.setTheme(Theme.DARK);
+    return Theme.DARK;
   }
 
-  public setLightMode() {
-    document.documentElement.dataset.theme = "light";
-    this.setTheme("light");
+  /**
+   * Set the theme of the application to light
+   */
+  public setLightTheme(): Theme {
+    document.documentElement.dataset.theme = Theme.LIGHT;
+    this.setTheme(Theme.LIGHT);
+    return Theme.LIGHT;
+  }
+
+  /**
+   * Get if the application is in development mode
+   */
+  public isDevelopment(): boolean {
+    return this.base.environment === Environment.DEVELOPMENT;
   }
 }

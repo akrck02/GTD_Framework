@@ -1,4 +1,4 @@
-import { Configuration } from "../configuration/configuration";
+import { Configuration } from "../configuration/configuration.js";
 import { IObserver } from "../lib/gtdf/core/observable/observer.js";
 import { Signal } from "../lib/gtdf/core/signals/signals.js";
 
@@ -32,7 +32,7 @@ export class TextBundle implements IObserver {
     this.bundle = {};
     for (let bundle of TextBundle.AVAILABLE_BUNDLES) {
       this.bundle[bundle] = await fetch(
-        `${Configuration.instance().Path.language}${Configuration.instance().getLanguage()}/${bundle}.json`,
+        `${Configuration.instance().path.language}${Configuration.instance().getLanguage()}/${bundle}.json`,
       ).then((response) => response.json());
     }
 

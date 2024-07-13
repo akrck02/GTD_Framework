@@ -1,0 +1,45 @@
+gtdf-select {
+    font-size: 0.9rem;
+}
+
+gtdf-select #display-box {
+    background: var(--surface-1);
+    padding: 0.5rem 0.7rem;
+    border-radius: 0.35rem;
+    border: 0.1rem solid #eee;
+    cursor: pointer;
+}
+
+gtdf-select #display-box:hover {
+    transition: backgrounbd var(--fast);
+    background: var(--surface-1);
+}
+
+gtdf-select #display-box #display-box-icon {
+    margin-left: 0.5rem;
+}
+
+gtdf-select #selector {
+    position: fixed;
+    top: 3.5rem;
+    visibility: hidden;
+    background: #fff;
+    box-shadow: 0.1rem 0.2rem 0.2rem rgba(0, 0, 0, 0.05);
+    border-radius: 0.35rem;
+    width: auto;
+}
+
+gtdf-select.show #selector {
+    visibility: visible;
+}
+
+gtdf-select #selector .option {
+    padding: 0.5rem 0.7rem;
+    margin-top: 0.1rem;
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+gtdf-select #selector .option:hover {
+    background: var(--surface-1);
+}

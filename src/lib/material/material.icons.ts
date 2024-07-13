@@ -1,6 +1,6 @@
-import { Configuration } from "../../configuration/configuration";
-import { UIComponent } from "../gtdf/component/ui.component";
-import { IObserver } from "../gtdf/core/observable/observer";
+import { Configuration } from "../../configuration/configuration.js";
+import { UIComponent } from "../gtdf/component/ui.component.js";
+import { IObserver } from "../gtdf/core/observable/observer.js";
 
 /**
  * Material Icons properties
@@ -28,7 +28,7 @@ export class MaterialIconsLoader implements IObserver {
     if (this.collection != undefined) return;
 
     this.collection = await fetch(
-      Configuration.instance().Path.icons + "materialicons.json",
+      Configuration.instance().path.icons + "materialicons.json",
     ).then((response) => response.json());
   }
 }

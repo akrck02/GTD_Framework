@@ -1,10 +1,10 @@
-import { Configuration } from "../../configuration/configuration";
-import { Errors } from "../../configuration/error";
-import { HTML } from "../../lib/gtdf/component/dom";
-import { UIComponent } from "../../lib/gtdf/component/ui.component";
-import { Route } from "../../lib/gtdf/core/decorator/route";
-import { Singleton } from "../../lib/gtdf/core/decorator/singleton";
-import { ViewUI } from "../../lib/gtdf/view/view.ui";
+import { Configuration } from "../../configuration/configuration.js";
+import { Errors } from "../../configuration/error.js";
+import { HTML } from "../../lib/gtdf/component/dom.js";
+import { UIComponent } from "../../lib/gtdf/component/ui.component.js";
+import { Route } from "../../lib/gtdf/core/decorator/route.js";
+import { Singleton } from "../../lib/gtdf/core/decorator/singleton.js";
+import { ViewUI } from "../../lib/gtdf/view/view.ui.js";
 
 @Route("error")
 @Singleton()

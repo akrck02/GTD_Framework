@@ -1,25 +1,44 @@
+import { Configuration } from "./configuration/configuration.js";
 import BootHandler from "./core/boot.handler.js";
+import { ISingleton, Singleton } from "./lib/gtdf/core/decorator/singleton.js";
+import { StaticImplements } from "./lib/gtdf/core/static/static.inteface.js";
+import Urls from "./lib/gtdf/data/urls.js";
+import Router from "./views/router.js";
 
-class App {
+/**
+ * Class that represents the application frontend proccess
+ * it can be intantiated more than once, but the classic
+ * web application structure wont need it.
+ */
+@Singleton()
+@StaticImplements<ISingleton<App>>()
+export default class App {
   private boot: BootHandler;
+  static _instance: App;
+  static instance: () => App;
 
-  constructor() {
-    document.body.style.background = "#222";
+  constructor() {}
+
+  async load() {
     this.boot = new BootHandler();
+    await this.boot.start();
     this.overrides();
 
-    console.log("App is starting...");
+    const params = Urls.getParametersByIndex(
+      window.location.hash.slice(1).toLowerCase(),
+      1,
+    );
+    Router.instance().load(params);
+    console.debug("App is starting...");
   }
 
-  overrides() {}
+  overrides() {
+    console.debug = (logs) => {
+      if (Configuration.instance().isDevelopment()) console.log(logs);
+    };
+  }
 
   async start() {
     await this.boot.start();
   }
 }
-
-async function loadAppInstance() {
-  await new App().start();
-}
-
-window.onload = loadAppInstance;

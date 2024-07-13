@@ -34,7 +34,7 @@ export default class HomeView extends ViewUI {
 
   public async show(params: string[], container: UIComponent) {
     Configuration.instance().setTitle(
-      `${Configuration.instance().Base.app_name} - ${Text.home.TITLE}`,
+      `${Configuration.instance().base.app_name} - ${Text.home.TITLE}`,
     );
 
     const lang = Strings.toNormalCase(
@@ -57,7 +57,7 @@ export default class HomeView extends ViewUI {
       type: HTML.IMG,
       id: HomeView.LOGO_ID,
       attributes: {
-        src: `${Configuration.instance().Path.icons}${HomeView.LOGO_SVG}`,
+        src: `${Configuration.instance().path.icons}${HomeView.LOGO_SVG}`,
         alt: Text.home.LOGO_ALT,
       },
     });
@@ -143,7 +143,7 @@ export default class HomeView extends ViewUI {
     const infoBoxIcon = new UIComponent({
       type: HTML.IMG,
       attributes: {
-        src: Configuration.instance().Path.icons + image,
+        src: Configuration.instance().path.icons + image,
         alt: `${alt}`,
       },
     });
