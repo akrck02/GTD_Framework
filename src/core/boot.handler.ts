@@ -17,7 +17,6 @@ export default class BootHandler {
   async start() {
     await this.configuration.start();
     await this.resources.start();
-
     await this.keyboard.start();
   }
 }

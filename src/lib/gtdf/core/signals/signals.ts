@@ -2,19 +2,31 @@ import { ISingleton, Singleton } from "../decorator/singleton.js";
 import { IObservable, IObserver } from "../observable/observer.js";
 import { StaticImplements } from "../static/static.inteface.js";
 
+/**
+ * This interface represents a signal that can be emitted
+ * @author akrck02
+ */
 export default interface ISignal extends IObservable {
   id: string;
   subscribers: IObserver[];
+
+  /**
+   * Subscribe an observer to the signal
+   */
   emit: (data?: any) => Promise<void>;
 }
 
+/**
+ * This class represents a signal that can be emitted
+ * and observed by observers
+ * @implements ISignal the signal interface
+ * @implements ISingleton the singleton interface
+ */
 @Singleton()
 @StaticImplements<ISingleton<Signal>>()
 export class Signal implements ISignal {
-  public static _instance: any;
-  public static instance(): any {
-    return this._instance;
-  }
+  public static instance: Signal;
+  public static instanceFn: () => Signal;
 
   id: string;
   sync: boolean;
@@ -29,21 +41,21 @@ export class Signal implements ISignal {
   }
 
   /**
-   * Subscribe an observer to the signal
+   * @inheritdoc
    */
   public subscribe(observer: IObserver) {
     this.subscribers.push(observer);
   }
 
   /**
-   * Unsubscribe an observer from the signal
+   * @inheritdoc
    */
   public unsubscribe(observer: IObserver) {
     this.subscribers = this.subscribers.filter((obs) => obs !== observer);
   }
 
   /**
-   * notify the current state to all subscribers
+   * @inheritdoc
    */
   async notify() {
     for (let observer of this.subscribers) {
@@ -57,7 +69,7 @@ export class Signal implements ISignal {
   }
 
   /**
-   * emit the signal with given data
+   * @inheritdoc
    */
   public async emit(data?: any) {
     this.content = data;

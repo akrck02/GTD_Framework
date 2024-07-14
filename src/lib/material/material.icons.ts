@@ -1,6 +1,10 @@
 import { Configuration } from "../../configuration/configuration.js";
+import { BubbleUI } from "../bubble/bubble.js";
+import { Html } from "../gtdf/component/dom.js";
 import { UIComponent } from "../gtdf/component/ui.component.js";
+import { ISingleton, Singleton } from "../gtdf/core/decorator/singleton.js";
 import { IObserver } from "../gtdf/core/observable/observer.js";
+import { StaticImplements } from "../gtdf/core/static/static.inteface.js";
 
 /**
  * Material Icons properties
@@ -8,6 +12,7 @@ import { IObserver } from "../gtdf/core/observable/observer.js";
  * @property size The size of the icon
  * @property classes The classes of the icon
  * @property svg The svg content of the icon [optional]
+ * @author akrck02
  */
 export interface MaterialIconsProperties {
   fill?: string | "#202020";
@@ -17,7 +22,10 @@ export interface MaterialIconsProperties {
 }
 
 /**
- * Material icon loader observer
+ * Material icon loader class
+ * loads the material icons from the json file
+ * @implements IObserver the observer interface
+ * @author akrck02
  */
 export class MaterialIconsLoader implements IObserver {
   public collection: any;
@@ -28,32 +36,26 @@ export class MaterialIconsLoader implements IObserver {
     if (this.collection != undefined) return;
 
     this.collection = await fetch(
-      Configuration.instance().path.icons + "materialicons.json",
+      Configuration.instance.path.icons + "materialicons.json",
     ).then((response) => response.json());
   }
 }
 
 /**
- * Material Icons utility class
+ * Material Icon utility class
+ * @implements IObserver the observer interface
+ * @implements ISingleton the singleton interface
+ * @author akrck02
  */
+@Singleton()
+@StaticImplements<ISingleton<MaterialIcons>>()
 export default class MaterialIcons {
-  private observer: MaterialIconsLoader;
-  private static _instance: MaterialIcons;
+  public readonly loader: MaterialIconsLoader;
+  public static instance: MaterialIcons;
+  public static instanceFn: () => MaterialIcons;
 
   private constructor() {
-    this.observer = new MaterialIconsLoader();
-  }
-
-  public static get instance(): MaterialIcons {
-    if (!MaterialIcons._instance) {
-      MaterialIcons._instance = new MaterialIcons();
-    }
-
-    return MaterialIcons._instance;
-  }
-
-  public get loader(): MaterialIconsLoader {
-    return this.observer;
+    this.loader = new MaterialIconsLoader();
   }
 
   /**
@@ -70,7 +72,7 @@ export default class MaterialIcons {
    * }
    */
   public get collection(): any {
-    return this.observer.collection;
+    return this.loader.collection;
   }
 
   /**
@@ -84,11 +86,10 @@ export default class MaterialIcons {
     properties: MaterialIconsProperties,
   ): UIComponent {
     properties.svg = MaterialIcons.instance.collection[name] || "";
-    let text: string = createSVG(properties);
     const icon = new UIComponent({
-      type: "div",
-      classes: ["icon", "box-center"],
-      text: text,
+      type: Html.Div,
+      classes: ["icon", BubbleUI.BoxCenter],
+      text: createSVG(properties),
     });
 
     return icon;

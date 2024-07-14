@@ -1,6 +1,6 @@
 import { Configuration } from "../../configuration/configuration.js";
 import { Errors } from "../../configuration/error.js";
-import { HTML } from "../../lib/gtdf/component/dom.js";
+import { Html } from "../../lib/gtdf/component/dom.js";
 import { UIComponent } from "../../lib/gtdf/component/ui.component.js";
 import { Route } from "../../lib/gtdf/core/decorator/route.js";
 import { Singleton } from "../../lib/gtdf/core/decorator/singleton.js";
@@ -34,17 +34,17 @@ export default class ErrorView extends ViewUI {
 
     // Image
     const image = new UIComponent({
-      type: HTML.IMG,
+      type: Html.Img,
       id: ErrorView.IMAGE_ID,
       attributes: {
-        src: Configuration.instance().Path.icons + "error.svg",
+        src: Configuration.instance.path.icons + "error.svg",
       },
     });
     this.appendChild(image);
 
     // Error title
     const title = new UIComponent({
-      type: HTML.H1,
+      type: Html.H1,
       id: ErrorView.TITLE_ID,
       text: error.friendly,
     });
@@ -53,7 +53,7 @@ export default class ErrorView extends ViewUI {
 
     // Error description
     const description = new UIComponent({
-      type: HTML.P,
+      type: Html.P,
       text: error.description,
     });
 

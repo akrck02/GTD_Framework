@@ -1,3 +1,5 @@
+import { BubbleUI } from "../../lib/bubble/bubble.js";
+import { Html } from "../../lib/gtdf/component/dom.js";
 import { UIComponent } from "../../lib/gtdf/component/ui.component.js";
 import MaterialIcons from "../../lib/material/material.icons.js";
 
@@ -48,7 +50,7 @@ export default class Select extends UIComponent {
     });
 
     this.display = new UIComponent({
-      type: "p",
+      type: Html.P,
       text: selected,
       data: {
         value: map[selected],
@@ -65,14 +67,14 @@ export default class Select extends UIComponent {
     icon.appendTo(displayBox);
 
     this.selector = new UIComponent({
-      type: "div",
+      type: Html.Div,
       id: Select.SELECTOR_ID,
-      classes: ["box-column"],
+      classes: [BubbleUI.BoxColumn],
     });
 
     Object.keys(map).forEach((l) => {
       const option = new UIComponent({
-        type: "div",
+        type: Html.Div,
         text: l,
         classes: [Select.OPTION_CLASS],
         data: {
@@ -81,9 +83,7 @@ export default class Select extends UIComponent {
       });
 
       option.setEvents({
-        click: () => {
-          onclick(option.element.dataset.value);
-        },
+        click: () => onclick(option.element.dataset.value),
       });
 
       option.appendTo(this.selector);

@@ -6,6 +6,12 @@ view#home {
     background: var(--background);
 }
 
+view#home gtdf-select {
+    position: absolute;
+    right: 2rem;
+    top: 1rem;
+}
+
 view#home #logo {
     max-width: 40rem;
 }

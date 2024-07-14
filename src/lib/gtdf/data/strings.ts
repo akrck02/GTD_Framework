@@ -1,3 +1,7 @@
+/**
+ * This class is used to provide utility functions for strings
+ * @author akrck02
+ */
 export default class Strings {
   public static toNormalCase(str: string): string {
     if (str.length < 2) {
@@ -8,6 +12,9 @@ export default class Strings {
   }
 }
 
+/**
+ * This interface is used to represent a map of strings
+ */
 export interface StringMap {
   [key: string]: string;
 }

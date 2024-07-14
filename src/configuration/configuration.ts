@@ -83,10 +83,8 @@ export class Configuration implements IConfiguration {
   private static readonly URL_KEY: string = "url";
   private static readonly CONFIGURATION_NAME_APPENDIX: string = "-config";
 
-  public static _instance: any;
-  public static instance(): any {
-    return this._instance;
-  }
+  public static instance: Configuration;
+  public static instanceFn: () => Configuration;
 
   variables: IVariables;
   base: IBase;
@@ -99,7 +97,6 @@ export class Configuration implements IConfiguration {
    * this mehod adapts the urls
    */
   load(response: IConfiguration) {
-
     this.variables = response.variables;
     this.base = response.base;
     this.path = response.path;

@@ -1,6 +1,6 @@
 {
   "name": "gtdf",
-  "version": "2.0.0b",
+  "version": "2.1.0b",
   "description": "The simple frontend framework",
   "main": "index.js",
   "directories": {

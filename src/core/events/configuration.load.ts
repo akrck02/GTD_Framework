@@ -10,7 +10,7 @@ export default class ConfigurationLoader implements IEvent {
       parameters: {},
     })
       .status(200, (configuration) =>
-        Configuration.instance().load(configuration),
+        Configuration.instance.load(configuration),
       )
       .error(this.errorHandle)
       .json();

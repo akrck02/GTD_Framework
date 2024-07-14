@@ -1,3 +1,7 @@
+/**
+ * This class provides methods for url manipulation.
+ * @author akrck02
+ */
 export default class Urls {
   /**
    * Get parameters of a url by breakpoint
@@ -19,9 +23,7 @@ export default class Urls {
     const index = params.indexOf(breakpoint);
 
     if (index == -1) return [];
-
-    params = params.slice(index, params.length);
-    return params;
+    return params.slice(index, params.length);
   }
 
   /**
@@ -90,11 +92,7 @@ export default class Urls {
    * @returns parameter of a url
    */
   public static addSlash(url: string): string {
-    if (url[url.length - 1] != "/") {
-      url += "/";
-    }
-
-    return url;
+    return url[url.length - 1] === "/" ? url : url + "/";
   }
 
   /**
@@ -103,10 +101,6 @@ export default class Urls {
    * @returns parameter of a url
    */
   public static addStartSlash(url: string): string {
-    if (url[0] != "/") {
-      url = "/" + url;
-    }
-
-    return url;
+    return url[0] === "/" ? url : "/" + url;
   }
 }

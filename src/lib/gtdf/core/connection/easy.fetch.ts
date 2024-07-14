@@ -1,4 +1,4 @@
-import { HTTPS_METHOD } from "./http.js";
+import { HttpMethod } from "./http.js";
 
 type ResponseMiddleware = (res: globalThis.Response) => any;
 type ResponseStatusFunction = (res: any) => any;
@@ -204,7 +204,7 @@ export class Response {
  *
  */
 export interface FetchProperties {
-  method?: HTTPS_METHOD;
+  method?: HttpMethod;
   parameters: object | FormData;
   url: string;
   charset?: string;
@@ -217,7 +217,7 @@ export class EasyFetch {
 
   public static get(properties: FetchProperties): Response {
     return EasyFetch.exec({
-      method: HTTPS_METHOD.GET,
+      method: HttpMethod.Get,
       parameters: properties.parameters,
       url: properties.url,
       headers: properties.headers,
@@ -228,7 +228,7 @@ export class EasyFetch {
 
   public static post(properties: FetchProperties): Response {
     return EasyFetch.exec({
-      method: HTTPS_METHOD.POST,
+      method: HttpMethod.Post,
       parameters: properties.parameters,
       url: properties.url,
       headers: properties.headers,
@@ -239,7 +239,7 @@ export class EasyFetch {
 
   public static put(properties: FetchProperties): Response {
     return EasyFetch.exec({
-      method: HTTPS_METHOD.PUT,
+      method: HttpMethod.Put,
       parameters: properties.parameters,
       url: properties.url,
       headers: properties.headers,
@@ -250,7 +250,7 @@ export class EasyFetch {
 
   public static delete(properties: FetchProperties): Response {
     return EasyFetch.exec({
-      method: HTTPS_METHOD.DELETE,
+      method: HttpMethod.Delete,
       parameters: properties.parameters,
       url: properties.url,
       headers: properties.headers,
@@ -261,7 +261,7 @@ export class EasyFetch {
 
   public static patch(properties: FetchProperties): Response {
     return EasyFetch.exec({
-      method: HTTPS_METHOD.PATCH,
+      method: HttpMethod.Patch,
       parameters: properties.parameters,
       url: properties.url,
       headers: properties.headers,
@@ -272,7 +272,7 @@ export class EasyFetch {
 
   public static head(properties: FetchProperties): Response {
     return EasyFetch.exec({
-      method: HTTPS_METHOD.HEAD,
+      method: HttpMethod.Head,
       parameters: properties.parameters,
       url: properties.url,
       headers: properties.headers,
@@ -283,7 +283,7 @@ export class EasyFetch {
 
   public static options(properties: FetchProperties): Response {
     return EasyFetch.exec({
-      method: HTTPS_METHOD.OPTIONS,
+      method: HttpMethod.Options,
       parameters: properties.parameters,
       url: properties.url,
       headers: properties.headers,
@@ -294,7 +294,7 @@ export class EasyFetch {
 
   public static connect(properties: FetchProperties): Response {
     return EasyFetch.exec({
-      method: HTTPS_METHOD.CONNECT,
+      method: HttpMethod.Connect,
       parameters: properties.parameters,
       url: properties.url,
       headers: properties.headers,
@@ -305,7 +305,7 @@ export class EasyFetch {
 
   public static trace(properties: FetchProperties): Response {
     return EasyFetch.exec({
-      method: HTTPS_METHOD.TRACE,
+      method: HttpMethod.Trace,
       parameters: properties.parameters,
       url: properties.url,
       headers: properties.headers,
@@ -316,7 +316,7 @@ export class EasyFetch {
 
   public static update(properties: FetchProperties): Response {
     return EasyFetch.exec({
-      method: HTTPS_METHOD.UPDATE,
+      method: HttpMethod.Update,
       parameters: properties.parameters,
       url: properties.url,
       headers: properties.headers,
@@ -351,7 +351,7 @@ export class EasyFetch {
 
     properties.headers && Object.assign(options.headers, properties.headers);
 
-    if (properties.method !== HTTPS_METHOD.GET) {
+    if (properties.method !== HttpMethod.Get) {
       if (properties.parameters instanceof FormData) {
         options["body"] = properties.parameters;
         options.headers["Content-type"] =

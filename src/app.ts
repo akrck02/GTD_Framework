@@ -14,8 +14,8 @@ import Router from "./views/router.js";
 @StaticImplements<ISingleton<App>>()
 export default class App {
   private boot: BootHandler;
-  static _instance: App;
-  static instance: () => App;
+  static instanceFn: () => App;
+  static instance: App;
 
   constructor() {}
 
@@ -28,13 +28,13 @@ export default class App {
       window.location.hash.slice(1).toLowerCase(),
       1,
     );
-    Router.instance().load(params);
+    Router.instance.load(params);
     console.debug("App is starting...");
   }
 
   overrides() {
     console.debug = (logs) => {
-      if (Configuration.instance().isDevelopment()) console.log(logs);
+      if (Configuration.instance.isDevelopment()) console.log(logs);
     };
   }
 

@@ -16,7 +16,7 @@ export default class Utils {
     force: boolean = false,
   ) {
     if (force) {
-      location.href = Configuration.instance().Views.blank;
+      location.href = Configuration.instance.views.blank;
     }
 
     url += params.join("/");

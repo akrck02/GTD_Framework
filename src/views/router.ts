@@ -1,6 +1,6 @@
 import { SignalBuffer } from "../core/signal.buffer.js";
 import InitializeError from "../error/initialize.error.js";
-import { HTML } from "../lib/gtdf/component/dom.js";
+import { Html } from "../lib/gtdf/component/dom.js";
 import { UIComponent } from "../lib/gtdf/component/ui.component.js";
 import { Routes } from "../lib/gtdf/core/decorator/route.js";
 import { ISingleton, Singleton } from "../lib/gtdf/core/decorator/singleton.js";
@@ -18,8 +18,8 @@ export default class Router implements IObserver {
   private parent: HTMLElement;
   private container: UIComponent;
 
-  public static _instance: Router;
-  public static instance: () => Router;
+  public static instance: Router;
+  public static instanceFn: () => Router;
 
   private static readonly VIEW_CHANGE_REQUESTED_SIGNAL = "viewChangeRequested";
 
@@ -34,7 +34,7 @@ export default class Router implements IObserver {
     }
 
     this.container = new UIComponent({
-      type: HTML.DIV,
+      type: Html.Div,
       id: "view-container-box",
       styles: {
         width: "100%",
@@ -79,7 +79,7 @@ export default class Router implements IObserver {
       for (const route of Routes)
         if (await this.navigate(route, params)) return;
 
-      ErrorView.instance().show(["404"], this.container);
+      ErrorView.instance.show(["404"], this.container);
     } catch (error) {
       console.error(error);
     }
