@@ -1,4 +1,5 @@
 import { Configuration } from "../configuration/configuration.js";
+import { EasyFetch } from "../lib/gtdf/core/connection/easy.fetch.js";
 import { ISingleton, Singleton } from "../lib/gtdf/core/decorator/singleton.js";
 import { IObserver } from "../lib/gtdf/core/observable/observer.js";
 import { Signal } from "../lib/gtdf/core/signals/signals.js";
@@ -14,7 +15,7 @@ export class Text implements IObserver {
   public static instanceFn: () => Text;
   public static reloadSignal = new Signal(Text.RELOAD_TEXT_SIGNAL);
 
-  private availableBundles: { [key: string]: { [key: string]: string } };
+  private availableBundles: any;
   private constructor() {
     this.availableBundles = {};
   }
@@ -31,11 +32,17 @@ export class Text implements IObserver {
     if (category !== undefined) return category;
 
     let attempts = 0;
-    while (category === undefined && attempts < Text.RETRY_ATTEMPTS) {
+    while (undefined === category && attempts < Text.RETRY_ATTEMPTS) {
       attempts++;
-      category = await fetch(
-        `${Configuration.instance.path.language}${Configuration.instance.getLanguage()}/${name}.json`,
-      ).then((response) => response.json());
+
+      await EasyFetch.get({
+        url: `${Configuration.instance.path.language}${Configuration.instance.getLanguage().locales[0]}/${name}.json`,
+        parameters: {},
+      })
+        .status(200, (json) => {
+          category = json;
+        })
+        .json();
     }
 
     this.availableBundles[name] = category;

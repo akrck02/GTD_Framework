@@ -14,43 +14,61 @@ import HomeView from "./home/home.view.ui.js";
 @Singleton()
 @StaticImplements<ISingleton<Router>>()
 export default class Router implements IObserver {
-  private static VIEW_CONTAINER_ID = "view-container";
-  private parent: HTMLElement;
-  private container: UIComponent;
+  private static readonly VIEW_CONTAINER_ID = "view-container";
+  private static readonly VIEW_CONTAINER_BOX_ID = "view-container-box";
+
+  private static readonly VIEW_CHANGE_REQUESTED_SIGNAL = "viewChangeRequested";
+  private static readonly VIEW_RELOAD_SIGNAL = "viewReload";
 
   public static instance: Router;
   public static instanceFn: () => Router;
 
-  private static readonly VIEW_CHANGE_REQUESTED_SIGNAL = "viewChangeRequested";
+  private parent: HTMLElement;
+  private container: UIComponent;
+  private currentView: ViewUI;
+  private currentParams: string[];
 
   private changeViewRequestedSignal: Signal;
+  private reloadCurrentViewSignal: Signal;
 
   private constructor() {
     this.parent = document.getElementById("view-container") as HTMLElement;
 
     //If no parent is present on the HTML file throws an error
-    if (!this.parent) {
+    if (!this.parent)
       throw new InitializeError("view-container does not exist");
-    }
 
     this.container = new UIComponent({
       type: Html.Div,
-      id: "view-container-box",
+      id: Router.VIEW_CONTAINER_BOX_ID,
       styles: {
         width: "100%",
         height: "100%",
       },
     });
 
+    this.suscribeToSignals();
     this.container.appendTo(this.parent);
+  }
 
+  /**
+   * Suscribe to the signals
+   */
+  private suscribeToSignals() {
     this.changeViewRequestedSignal = new Signal(
       Router.VIEW_CHANGE_REQUESTED_SIGNAL,
     );
     SignalBuffer.add(this.changeViewRequestedSignal);
     this.changeViewRequestedSignal.subscribe(this);
+
+    this.reloadCurrentViewSignal = new Signal(Router.VIEW_RELOAD_SIGNAL);
+    SignalBuffer.add(this.reloadCurrentViewSignal);
+    this.reloadCurrentViewSignal.subscribe(this);
   }
 
+  /**
+   * @inheritdoc
+   */
   async update(data?: any): Promise<void> {
     console.debug(data);
     console.debug(`Router update to /${data.view}`);
@@ -85,12 +103,24 @@ export default class Router implements IObserver {
     }
   }
 
+  /**
+   * Navigate to the given view
+   */
   public async navigate(view: ViewUI, params: string[] = []): Promise<boolean> {
     if (!view.isPointing(params[0])) return false;
 
+    this.currentView = view;
+    this.currentParams = params;
     view.clean();
     await view.show(params.splice(1), this.container);
     return true;
+  }
+
+  /**
+   * Reload the current view
+   */
+  public async reloadCurrentView() {
+    await this.currentView.show(this.currentParams, this.container);
   }
 
   /**

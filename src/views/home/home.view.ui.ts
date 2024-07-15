@@ -48,7 +48,7 @@ export default class HomeView extends ViewUI {
     );
 
     const lang = Strings.toNormalCase(
-      Language.getName(Configuration.instance.getLanguage()),
+      Configuration.instance.getLanguage().name,
     );
     const select = new Select(
       HomeViewCore.getLanguages(),

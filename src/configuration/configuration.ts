@@ -1,7 +1,7 @@
 import { ISingleton, Singleton } from "../lib/gtdf/core/decorator/singleton.js";
 import { StaticImplements } from "../lib/gtdf/core/static/static.inteface.js";
 import Urls from "../lib/gtdf/data/urls.js";
-import Language from "../lib/gtdf/language/language.js";
+import Language, { ILanguage } from "../lib/gtdf/language/language.js";
 
 /**
  * Environment states
@@ -151,7 +151,7 @@ export class Configuration implements IConfiguration {
       this.getStorageConfigurationVariable(Configuration.LANGUAGE_KEY) ==
       undefined
     )
-      this.setLanguage(Language.get(navigator.language));
+      this.setLanguage(Language.get(navigator.language).main);
 
     if (this.getStorageConfigurationVariable(Configuration.THEME) == undefined)
       this.setTheme(Theme.LIGHT);
@@ -232,7 +232,7 @@ export class Configuration implements IConfiguration {
    * Get the current app language
    * @returns The app language
    */
-  public getLanguage(): string {
+  public getLanguage(): ILanguage {
     return Language.get(
       this.getStorageConfigurationVariable(Configuration.LANGUAGE_KEY),
     );

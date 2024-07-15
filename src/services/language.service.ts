@@ -1,6 +1,6 @@
 import { Configuration } from "../configuration/configuration.js";
 import { StringMap } from "../lib/gtdf/data/strings.js";
-import { AvailableLanguage } from "../lib/gtdf/language/language.js";
+import Language, { ILanguage } from "../lib/gtdf/language/language.js";
 
 /**
  * This class represents the language service
@@ -14,22 +14,10 @@ export default class LanguageService {
    */
   public static getLanguages(): StringMap {
     const formatted = {};
-    Object.keys(AvailableLanguage).forEach((lang) =>
-      LanguageService.addFormattedLanguage(lang, formatted),
-    );
-    console.log(formatted);
+    Language.available.forEach((lang: ILanguage) => {
+      formatted[lang.name] = lang.main;
+    });
     return formatted;
-  }
-
-  /**
-   * Adds a formatted language to the map
-   * key is the formatted language
-   * value is the language enum value
-   * @param lang The language to add
-   * @param map The map to add the language to
-   */
-  private static addFormattedLanguage(lang: string, map: StringMap) {
-    map[lang] = AvailableLanguage[lang];
   }
 
   /**
@@ -39,14 +27,6 @@ export default class LanguageService {
    */
   private static formatLanguageFirstMayus(lang: string): string {
     return lang.toUpperCase().substring(0, 1) + lang.toLowerCase().substring(1);
-  }
-
-  /**
-   * Get available languages to add to the select
-   * @returns The available languages with names
-   */
-  public static getAvailableLanguagesWithNames(): StringMap {
-    return AvailableLanguage;
   }
 
   /**
