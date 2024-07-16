@@ -1,78 +1,61 @@
-import { ISingleton, Singleton } from "../decorator/singleton.js";
-import { IObservable, IObserver } from "../observable/observer.js";
-import { StaticImplements } from "../static/static.inteface.js";
+type SignalAction<T> = (data: T) => Promise<T>;
 
 /**
  * This interface represents a signal that can be emitted
  * @author akrck02
  */
-export default interface ISignal extends IObservable {
+export default interface ISignal<T> {
   id: string;
-  subscribers: IObserver[];
+  sync: boolean;
+  actions: { [key: string]: SignalAction<T> };
 
   /**
-   * Subscribe an observer to the signal
+   * emit the signal with data
    */
-  emit: (data?: any) => Promise<void>;
+  emit: (data: T) => Promise<void>;
 }
 
 /**
  * This class represents a signal that can be emitted
- * and observed by observers
- * @implements ISignal the signal interface
- * @implements ISingleton the singleton interface
+ * and listen by functions
  */
-@Singleton()
-@StaticImplements<ISingleton<Signal>>()
-export class Signal implements ISignal {
-  public static instance: Signal;
-  public static instanceFn: () => Signal;
-
+export class Signal<T> implements ISignal<T> {
   id: string;
   sync: boolean;
-  subscribers: IObserver[];
-  content: any;
+  actions: { [key: string]: SignalAction<T> };
 
   public constructor(id: string, sync = false) {
     this.id = id;
     this.sync = sync;
-    this.subscribers = [];
-    this.content = {};
+    this.actions = {};
   }
 
   /**
-   * @inheritdoc
+   * Connect a function to a signal
+   * @param action the function to disconnect
    */
-  public subscribe(observer: IObserver) {
-    this.subscribers.push(observer);
+  public connect(action: SignalAction<T>): void {
+    this.actions[action.name] = action;
   }
 
   /**
-   * @inheritdoc
+   * Disconnect a function from a signal
+   * @param action The function to disconnect
    */
-  public unsubscribe(observer: IObserver) {
-    this.subscribers = this.subscribers.filter((obs) => obs !== observer);
+  public disconnect(action: SignalAction<T>) {
+    this.actions[action.name] = undefined;
   }
 
   /**
-   * @inheritdoc
+   * Emit the signal and call the connected actions
+   * the function will wait for each action to finish
+   * if sync is enabled.
    */
-  async notify() {
-    for (let observer of this.subscribers) {
-      try {
-        if (this.sync) await observer.update(this.content);
-        else observer.update(this.content);
-      } catch (e) {
-        console.error(`Error notifying observer on signal ${this.id}`, e);
-      }
+  public async emit(data: T) {
+    for (let name in Object.keys(this.actions)) {
+      const action = this.actions[name];
+      if (this.sync) await action.call(data);
+      else action.call(data);
     }
-  }
-
-  /**
-   * @inheritdoc
-   */
-  public async emit(data?: any) {
-    this.content = data;
-    await this.notify();
   }
 }
