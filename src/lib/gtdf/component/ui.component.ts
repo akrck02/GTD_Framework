@@ -10,6 +10,7 @@ export interface UIProperties {
   id?: string | undefined;
   classes?: string[];
   attributes?: { [key: string]: string };
+  selectable?: boolean;
   styles?: { [key: string]: string };
   data?: { [key: string]: string };
   events?: { [key: string]: (event: Event) => void };
@@ -19,6 +20,7 @@ export interface UIProperties {
  * Class representing a UI component (HTML element) with custom properties and methods.
  * @description This class is a base class for all UI components.
  * @class UIComponent
+ * @author akrck02
  */
 export class UIComponent {
   element: HTMLElement;
@@ -28,6 +30,7 @@ export class UIComponent {
   id?: string;
   classes?: string[];
   attributes?: { [key: string]: string };
+  selectable?: boolean;
   styles?: { [key: string]: string };
   data?: { [key: string]: string };
   events?: { [key: string]: (event: Event) => void } | {};
@@ -38,6 +41,7 @@ export class UIComponent {
     this.id = props.id;
     this.classes = props.classes;
     this.attributes = props.attributes;
+    this.selectable = props.selectable;
     this.styles = props.styles;
     this.data = props.data;
     this.events = props.events;
@@ -47,39 +51,19 @@ export class UIComponent {
   createElement(): HTMLElement {
     let element: HTMLElement;
 
-    if (!this.type) {
-      throw "Element without type.";
-    }
-
+    if (!this.type) throw "Element without type.";
     element = document.createElement(this.type);
 
-    if (this.text) {
-      element.innerHTML = this.text;
-    }
+    if (this.text) element.innerHTML = this.text;
+    if (this.id) element.id = this.id;
+    if (this.classes) DOM.setClasses(element, this.classes);
+    if (this.attributes) DOM.setAttributes(element, this.attributes);
+    if (this.styles) DOM.setStyles(element, this.styles);
+    if (this.data) DOM.setDataset(element, this.data);
+    if (this.events) DOM.setEvents(element, this.events);
 
-    if (this.id) {
-      element.id = this.id;
-    }
-
-    if (this.classes) {
-      DOM.setClasses(element, this.classes);
-    }
-
-    if (this.attributes) {
-      DOM.setAttributes(element, this.attributes);
-    }
-
-    if (this.styles) {
-      DOM.setStyles(element, this.styles);
-    }
-
-    if (this.data) {
-      DOM.setDataset(element, this.data);
-    }
-
-    if (this.events) {
-      DOM.setEvents(element, this.events);
-    }
+    if (this.selectable == false)
+      DOM.setStyles(element, { userSelect: "none" });
 
     return element;
   }

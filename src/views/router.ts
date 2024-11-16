@@ -28,8 +28,8 @@ export default class Router implements IObserver {
   private currentView: ViewUI;
   private currentParams: string[];
 
-  private changeViewRequestedSignal: Signal;
-  private reloadCurrentViewSignal: Signal;
+  private changeViewRequestedSignal: Signal<void>;
+  private reloadCurrentViewSignal: Signal<void>;
 
   private constructor() {
     this.parent = document.getElementById("view-container") as HTMLElement;
@@ -58,12 +58,16 @@ export default class Router implements IObserver {
     this.changeViewRequestedSignal = new Signal(
       Router.VIEW_CHANGE_REQUESTED_SIGNAL,
     );
-    SignalBuffer.add(this.changeViewRequestedSignal);
-    this.changeViewRequestedSignal.subscribe(this);
+    this.changeViewRequestedSignal.connect({
+      origin: "Router",
+      action: async () => console.log("a"),
+    });
 
     this.reloadCurrentViewSignal = new Signal(Router.VIEW_RELOAD_SIGNAL);
-    SignalBuffer.add(this.reloadCurrentViewSignal);
-    this.reloadCurrentViewSignal.subscribe(this);
+    this.reloadCurrentViewSignal.connect({
+      origin: "Router",
+      action: async () => this.reloadCurrentView(),
+    });
   }
 
   /**

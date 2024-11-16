@@ -24,13 +24,14 @@ export default class Select extends UIComponent {
   ) {
     super({
       type: "gtdf-select",
-      classes: ["box-column"],
+      classes: [BubbleUI.BoxColumn],
+      selectable: false,
     });
 
     this.selected = 0;
     const displayBox = new UIComponent({
-      type: "div",
-      classes: ["box-row"],
+      type: Html.Div,
+      classes: [BubbleUI.BoxRow],
       id: Select.DISPLAY_BOX_ID,
     });
     displayBox.appendTo(this);
@@ -40,12 +41,7 @@ export default class Select extends UIComponent {
         e.preventDefault();
         e.stopPropagation();
 
-        if (this.element.classList.contains("show")) {
-          this.element.classList.remove("show");
-          return;
-        }
-
-        this.element.classList.add("show");
+        this.toggle();
       },
     });
 
@@ -83,12 +79,25 @@ export default class Select extends UIComponent {
       });
 
       option.setEvents({
-        click: () => onclick(option.element.dataset.value),
+        click: () => {
+          onclick(option.element.dataset.value);
+          this.display.element.textContent = option.element.textContent;
+          this.toggle();
+        },
       });
 
       option.appendTo(this.selector);
     });
 
     this.selector.appendTo(this);
+  }
+
+  private toggle() {
+    if (this.element.classList.contains("show")) {
+      this.element.classList.remove("show");
+      return;
+    }
+
+    this.element.classList.add("show");
   }
 }

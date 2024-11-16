@@ -9,6 +9,7 @@ import Router from "./views/router.js";
  * Class that represents the application frontend proccess
  * it can be intantiated more than once, but the classic
  * web application structure wont need it.
+ * @author akrck02
  */
 @Singleton()
 @StaticImplements<ISingleton<App>>()

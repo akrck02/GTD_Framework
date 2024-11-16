@@ -10,7 +10,6 @@ export default class BootHandler {
   constructor() {
     this.configuration = new ConfigurationLoader();
     this.resources = new ResourceLoader();
-
     this.keyboard = new KeyboardLoader();
   }
 

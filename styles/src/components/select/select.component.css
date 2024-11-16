@@ -6,7 +6,7 @@ gtdf-select #display-box {
     background: var(--surface-1);
     padding: 0.5rem 0.7rem;
     border-radius: 0.35rem;
-    border: 0.1rem solid #eee;
+    border: 0.1rem solid var(--surface-2);
     cursor: pointer;
 }
 
@@ -23,7 +23,7 @@ gtdf-select #selector {
     position: fixed;
     top: 3.5rem;
     visibility: hidden;
-    background: #fff;
+    background: var(--surface-1);
     box-shadow: 0.1rem 0.2rem 0.2rem rgba(0, 0, 0, 0.05);
     border-radius: 0.35rem;
     width: auto;
