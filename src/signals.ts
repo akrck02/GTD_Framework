@@ -1,3 +1,4 @@
+import { uuidv4 } from "./crypto.js"
 
 export type signalHandler = (data : any) => Promise<void> 
 const buffer : Map<string, signalHandler[]> = new Map()
@@ -39,10 +40,4 @@ export async function emitSignal(id : string , data: any){
   for (const target of targets) {
     target(data)
   }
-}
-
-function uuidv4() {
-  return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
-    (+c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> +c / 4).toString(16)
-  );
 }

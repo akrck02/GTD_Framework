@@ -1,4 +1,4 @@
-import { createDomElement } from "./dom.js"
+import { uiComponent } from "./dom.js"
 
 const icons : Map<string, Object> = new Map() 
 
@@ -34,7 +34,7 @@ export function getIcon(collectionId : string, key : string, size : string = "24
     return undefined
 
   const svg = `<svg height="${size}" width="${size}" viewBox="0 0 24 24" fill="${fill}">${content || ""}</svg>`
-  return createDomElement({ type : "div", text : svg })
+  return uiComponent({ type : "div", text : svg })
 }
 
 

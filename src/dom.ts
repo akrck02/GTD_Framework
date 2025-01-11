@@ -11,7 +11,7 @@ export interface UIProperties {
 }
 
 /** Create a DOM element */
-export function createDomElement(properties : UIProperties) : HTMLElement {
+export function uiComponent(properties : UIProperties) : HTMLElement {
   
   const element: HTMLElement = document.createElement(properties.type || "div")
   element.innerHTML = undefined != properties.text ? properties.text : ""
