@@ -1,6 +1,3 @@
-.vscode
-node_modules
-app/styles/out
-frontend/out
-frontend/temp
-backend/out
+temp
+src/test.ts
+icons.json
