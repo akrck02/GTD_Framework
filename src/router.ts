@@ -4,7 +4,6 @@ const paths : Map<string, viewHandler> = new Map()
 let homeHandler : viewHandler = async (_p, c) => { c.innerHTML = "Home page."}
 let notFoundHandler : viewHandler = async (_p, c) => { c.innerHTML = "Page not found."}
 
-
 /**
  * Register a new route.
  * @param path The router path
@@ -32,7 +31,7 @@ export function setRoute(path : string, handler : viewHandler) {
 
   // Replace all the variables with regex expressions to capture them later
   const regexp : RegExp = /\/(\$+)/g
-  path = path.replaceAll(regexp, "/([^\/]+)") //"/(\\w+)")
+  path = path.replaceAll(regexp, "/([^\/]+)")
   paths.set(path, handler)
   console.debug(`Set route ${path}`)
 }
