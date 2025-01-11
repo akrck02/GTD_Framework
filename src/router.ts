@@ -1,16 +1,16 @@
 import { viewHandler } from "./view.js";
 
-const paths : Map<String, viewHandler> = new Map()
-let notFoundHandler : viewHandler = async (_params : string[], container : HTMLElement) => {
-  container.innerHTML = "Page not found."
-}
+const paths : Map<string, viewHandler> = new Map()
+let homeHandler : viewHandler = async (_p, c) => { c.innerHTML = "Home page."}
+let notFoundHandler : viewHandler = async (_p, c) => { c.innerHTML = "Page not found."}
+
 
 /**
  * Register a new route.
  * @param path The router path
  * @param handler The route handler
  */
-export function registerRoute(path : string, handler : viewHandler) {
+export function setRoute(path : string, handler : viewHandler) {
 
   // If the path is empry return 
   if(undefined == path)
@@ -18,29 +18,30 @@ export function registerRoute(path : string, handler : viewHandler) {
 
   // If the path is blank or /, register home and return
   path = path.trim()
-  if("" == path || "/" == path){   
-    // TODO: register here.
+
+  // If the path is home
+  if("/" == path || "" == path) {
+    homeHandler = handler
     return
-  } 
+  }
 
   // If the path ends with / trim it
-  if("/" == path.substring(path.length - 1))
+  const indexOfSlash = path.indexOf("/")
+  if(-1 != indexOfSlash && "/" == path.substring(path.length - 1))
     path = path.substring(0, path.length - 1)
 
   // Replace all the variables with regex expressions to capture them later
-  const regexp : RegExp = /\/\(\$+)\/*/g
-  path = path.replaceAll(regexp, "/()/")  
-
+  const regexp : RegExp = /\/(\$+)/g
+  path = path.replaceAll(regexp, "/([^\/]+)") //"/(\\w+)")
   paths.set(path, handler)
-  console.log(`Route registered ${path}`)
-
+  console.debug(`Set route ${path}`)
 }
 
 /**
  * Register the route to display when route path is not found.
  * @param handler The view handler to call
  */
-export function registerNotFoundRoute(handler : viewHandler) {
+export function setNotFoundRoute(handler : viewHandler) {
   notFoundHandler = handler
 }
 
@@ -49,25 +50,47 @@ export function registerNotFoundRoute(handler : viewHandler) {
  * @param path The given path to search for
  * @param container The container to display the views in 
  */
-export function showViewForRoute(path: string, container : HTMLElement) {
+export function showRoute(path: string, container : HTMLElement) {
 
   container.innerHTML = ""
-  
-  for (const route in paths) {
 
-    // Check route if has property
-    if (false == paths.hasOwnProperty(route))
-      break
+  // If it is the home route, show
+  if("/" == path || "" == path){
+    homeHandler([], container)
+    return
+  }
+
+  // Else search matching route
+  const keys = Array.from(paths.keys()).sort(compareRouteLength)
+  for (const route of keys) {
 
     // Check if route matches
     const regexp = RegExp(route)
     const params = path.match(regexp)
+
     if(null != params && 0 != params.length){
-      paths[route](params.slice(1), container)
+      paths.get(route)(params.slice(1), container)
       return
     }
   }
   
   // If no route found, show not found view.
   notFoundHandler([], container)
+}
+
+/**
+ * Compare the length of two routes
+ */
+function compareRouteLength(a : string, b : string) : number {
+
+  const aLength = a.split("/").length - 1 
+  const bLength = b.split("/").length - 1
+
+  if(aLength == bLength)
+    return 0
+
+  if(aLength < bLength) 
+    return 1
+
+  return -1
 }
