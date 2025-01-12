@@ -16,7 +16,9 @@ export function uiComponent(properties : UIProperties) : HTMLElement {
   const element: HTMLElement = document.createElement(properties.type || "div")
   element.innerHTML = undefined != properties.text ? properties.text : ""
 
-  element.id = properties.id
+  if(undefined != properties.id)
+    element.id = properties.id
+  
   setDomClasses(element, properties.classes)
   setDomAttributes(element, properties.attributes)
   setDomStyles(element, properties.styles)
