@@ -1,8 +1,10 @@
 # Getting things done library.
 
-This is a library to develop web applications things easier.
-Every script is a module, they can be loaded importing the script.
-*see module dependencies*
+This is a library to develop web applications easier.
+Every script is a module that can be loaded importing the script.
+They may be dependant of other modules.
+
+*see module dependencies on each module docs*
 
 Example for a script importing a module: 
 
@@ -17,7 +19,6 @@ const title = uiComponent({
 document.body.appendChild(title)
 ```
 
-Every script is a module, the modules may be dependant of other modules.
 Read the docs below to understand the usage and behaviour.
 ## Learn how to 
 - [Create UI components.](./docs/dom.md)
