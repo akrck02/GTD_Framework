@@ -42,6 +42,7 @@ let currentLanguage : ILanguage = Languages.English
  * Set current language by locale
  * @param locale The locale to get the language for 
  * @param reloadBundles (Optional) Reload the existing bundles for current language
+ * @author akrck02
  */
 export async function setCurrentLanguage(locale : string, reloadBundles = false) {
   
@@ -68,7 +69,8 @@ export async function setCurrentLanguage(locale : string, reloadBundles = false)
 /**
  * Load a text bundle if needed 
  * @param id The bundle id 
- * @param maxAttemps (Optional) The max number of attemps, one by default 
+ * @param maxAttemps (Optional) The max number of attemps, one by default
+ * @author akrck02
  */
 export async function loadTextBundle(id : string, reload = false, maxAttemps = 1) {
 
@@ -95,6 +97,7 @@ export async function loadTextBundle(id : string, reload = false, maxAttemps = 1
  * Get text from a bundle 
  * @param bundleId The bundle id to take the text from
  * @param textId The text id
+ * @author akrck02
  */
 export function getText(bundleId : string, textId : string) : string {
   
