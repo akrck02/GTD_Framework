@@ -7,14 +7,12 @@ Every script is a module, they can be loaded importing the script.
 Example for a script importing a module: 
 
 ``` Typescript
+import {uiComponent} from "./dom.js" 
 
-    import {uiComponent} from "./dom.js" 
+const title = uiComponent({
+    type = "h1",
+    text = "Hello world!"
+})
 
-    const title = uiComponent({
-        type = "h1",
-        text = "Hello world!"
-    })
-
-    document.body.appendChild(title)
-
+document.body.appendChild(title)
 ```
