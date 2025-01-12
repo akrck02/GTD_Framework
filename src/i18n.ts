@@ -35,7 +35,6 @@ const buffer : Map<string, Map<string, string>> = new Map()
 /** Current language for the web app **/
 let currentLanguage : ILanguage = Languages.English
 
-
 /**
  * Set current language by locale
  * @param locale The locale to get the language for
@@ -50,18 +49,48 @@ export function setCurrentLanguage(locale : string) {
 
 
 /**
- * 
+ * Load a text bundle if needed 
+ * @param id The bundle id 
+ * @param maxAttemps (Optional) The max number of attemps, one by default 
  */
-export async function loadBundle(bundle : string) {
-  const language = await fetch(`${I18N_PATH}/${bundle}.json`).then(res => res.json())
+export async function loadBundle(id : string, maxAttemps = 1) {
+
+  // If the bundle exists, do nothing
+  if(buffer.has(id))
+    return
+
+  // Try to get the bundle retrying if necessary
+  let language = undefined
+  
+  for (let attemps = 0; attemps < maxAttemps && undefined == language; attemps++) {
+    language = await fetch(`${I18N_PATH}/${currentLanguage.main}/${id}.json`).then(res => res.json())
+  }
+
+  // If nothing was found, return
+  if(undefined == language)
+    return
+
+  // Add the bundle to buffer
+  buffer.set(id, language)
 }
 
 /**
- *
+ * Get text from a bundle 
+ * @param bundleId The bundle id to take the text from
+ * @param textId The text id
  */
-export function getText(bundle : string, key : string) : string {
+export function getText(bundleId : string, textId : string) : string {
   
-
-  return ""
+  // If the bundle does not exists inside the buffer, return empty
+  if(false == buffer.has(bundleId))
+    return ""
+  
+  // If the text does not exist in the bundle, return empty
+  const bundle = buffer.get(bundleId)
+  if(false == bundle.has(textId))
+    return ""
+ 
+  // Return the text
+  return bundle.get(textId)
 }
 
