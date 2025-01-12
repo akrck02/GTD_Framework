@@ -23,7 +23,10 @@ export function uiComponent(properties : UIProperties) : HTMLElement {
   setDomAttributes(element, properties.attributes)
   setDomStyles(element, properties.styles)
   setDomDataset(element, properties.data)
-  setDomStyles(element, { userSelect: "none" })
+  
+  if(false == properties.selectable){
+    setDomStyles(element, { userSelect: "none" })
+  }
 
   return element
 }

@@ -24,39 +24,56 @@ export const Languages = {
 const DEFAULT_LANGUAGE : ILanguage = Languages.English
 
 /** Set here the available languages for the app **/
-const AVAILABLE_LANGUAGES = [Languages.English]
+const AVAILABLE_LANGUAGES = [
+  Languages.English,
+  Languages.Spanish
+]
 
 /** This is the path of the i18n file structure **/
 const I18N_PATH = "./i18n" 
 
 /** This is the buffer **/ 
-const buffer : Map<string, Map<string, string>> = new Map()
+const buffer : Map<string, Object> = new Map()
 
 /** Current language for the web app **/
 let currentLanguage : ILanguage = Languages.English
 
 /**
  * Set current language by locale
- * @param locale The locale to get the language for
+ * @param locale The locale to get the language for 
+ * @param reloadBundles (Optional) Reload the existing bundles for current language
  */
-export function setCurrentLanguage(locale : string) {
+export async function setCurrentLanguage(locale : string, reloadBundles = false) {
   
-  if (undefined === locale) 
-    currentLanguage = DEFAULT_LANGUAGE
-  
-  currentLanguage = AVAILABLE_LANGUAGES.find((lang) => lang.locales.includes(locale)) || DEFAULT_LANGUAGE 
-}
+  // Set language
+  if (undefined === locale) {
+    currentLanguage = DEFAULT_LANGUAGE     
+  } else {
+    currentLanguage = AVAILABLE_LANGUAGES.find((lang) => lang.locales.includes(locale)) 
 
+    if(undefined == currentLanguage){
+      console.warn(`Language for locale ${locale} not found in available languages.`)
+      currentLanguage = DEFAULT_LANGUAGE 
+    }
+  }
+  
+  // If the reload is on and buffer already has bundles, try to get them
+  if(true == reloadBundles && 0 < buffer.size) {
+    for (const bundleId of buffer.keys()) {
+      await loadTextBundle(bundleId, true)
+    }
+  }
+}
 
 /**
  * Load a text bundle if needed 
  * @param id The bundle id 
  * @param maxAttemps (Optional) The max number of attemps, one by default 
  */
-export async function loadBundle(id : string, maxAttemps = 1) {
+export async function loadTextBundle(id : string, reload = false, maxAttemps = 1) {
 
   // If the bundle exists, do nothing
-  if(buffer.has(id))
+  if(false == reload && buffer.has(id))
     return
 
   // Try to get the bundle retrying if necessary
@@ -87,10 +104,10 @@ export function getText(bundleId : string, textId : string) : string {
   
   // If the text does not exist in the bundle, return empty
   const bundle = buffer.get(bundleId)
-  if(false == bundle.has(textId))
+  if(false == bundle.hasOwnProperty(textId))
     return ""
  
   // Return the text
-  return bundle.get(textId)
+  return bundle[textId]
 }
 
